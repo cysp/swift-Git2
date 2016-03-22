@@ -13,15 +13,14 @@ public enum RepositoryError: ErrorProtocol {
 
 
 public final class Repository {
-    let _inner: UnsafeMutablePointer<git_repository_t>
+    let _inner: git_repository_t
 
 
-    private init(inner: UnsafeMutablePointer<git_repository_t>) {
+    private init(inner: git_repository_t) {
         _inner = inner
     }
     deinit {
-        git_repository_free(_inner.pointee)
-        _inner.deinitialize(count: 1)
+        git_repository_free(_inner)
     }
 
     private class func discover(start_path: String, across_fs: Bool = false) -> String? {
@@ -46,8 +45,8 @@ public final class Repository {
             throw RepositoryError.NotFound
         }
 
-        let r: UnsafeMutablePointer<git_repository_t> = nil
-        let result = git_repository_open(r, (path as NSString).fileSystemRepresentation)
+        var r: git_repository_t = nil
+        let result = git_repository_open(&r, (path as NSString).fileSystemRepresentation)
         if result != GIT_OK.rawValue {
             throw RepositoryError.NotFound
         }
@@ -55,10 +54,19 @@ public final class Repository {
         return Repository(inner: r)
     }
 
+    public var isBare: Bool {
+        get {
+            if git_repository_is_bare(_inner) == 0 {
+                return false
+            }
+            return true
+        }
+    }
+
     public var workdir: String? {
         get {
             let workdir_bytes: UnsafePointer<CChar>
-            workdir_bytes = git_repository_workdir(_inner.pointee)
+            workdir_bytes = git_repository_workdir(_inner)
             if workdir_bytes == nil {
                 return nil
             }
