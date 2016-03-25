@@ -4,6 +4,10 @@ import Foundation
 import CGit2
 
 
+public enum BufGrowError: ErrorProtocol {
+    case AllocationFailure
+}
+
 public final class Buf {
     private var _inner: UnsafeMutablePointer<git_buf>
 
@@ -14,10 +18,20 @@ public final class Buf {
     public init(rawValue inner: UnsafeMutablePointer<git_buf>) {
         _inner = UnsafeMutablePointer(inner)
     }
-
     deinit {
+//        print("git_buf_free(\(_inner))")
         git_buf_free(_inner)
         _inner.deinitialize(count: 1)
+    }
+
+    public func grow(targetSize: size_t) throws {
+        let result = git_buf_grow(_inner, targetSize)
+        switch result {
+        case 0:
+            break
+        case _:
+            throw BufGrowError.AllocationFailure
+        }
     }
 }
 
