@@ -24,7 +24,7 @@ public final class Buf {
         _inner.deinitialize(count: 1)
     }
 
-    public func grow(targetSize: size_t) throws {
+    public func grow(to targetSize: size_t) throws {
         let result = git_buf_grow(_inner, targetSize)
         switch result {
         case 0:

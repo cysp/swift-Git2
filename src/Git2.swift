@@ -20,3 +20,12 @@ public struct Sorting: OptionSet {
     public static let Time = Sorting(rawValue: GIT_SORT_TIME.rawValue)
     public static let Reverse = Sorting(rawValue: GIT_SORT_REVERSE.rawValue)
 }
+
+
+public func Initialize() {
+    git_libgit2_init()
+}
+
+public func Deinitialize() {
+    git_libgit2_shutdown()
+}

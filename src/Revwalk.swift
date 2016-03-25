@@ -34,13 +34,13 @@ public final class Revwalk {
             throw RevwalkError.Error(result)
         }
     }
-    public func push(oid: Oid) throws {
+    public func push(oid oid: Oid) throws {
         let result = git_revwalk_push(_inner, oid.rawUnsafePointer)
         if result != 0 {
             throw RevwalkError.Error(result)
         }
     }
-    public func push(glob: String) throws {
+    public func push(glob glob: String) throws {
         let result: Int32 = glob.nulTerminatedUTF8.withUnsafeBufferPointer { (glob_raw) -> Int32 in
             return git_revwalk_push_glob(_inner, unsafeBitCast(glob_raw.baseAddress, to: UnsafePointer<Int8>.self))
         }
@@ -55,13 +55,13 @@ public final class Revwalk {
             throw RevwalkError.Error(result)
         }
     }
-    public func hide(oid: Oid) throws {
+    public func hide(oid oid: Oid) throws {
         let result = git_revwalk_hide(_inner, oid.rawUnsafePointer)
         if result != 0 {
             throw RevwalkError.Error(result)
         }
     }
-    public func hide(glob: String) throws {
+    public func hide(glob glob: String) throws {
         let result: Int32 = glob.nulTerminatedUTF8.withUnsafeBufferPointer { (glob_raw) -> Int32 in
             return git_revwalk_hide_glob(_inner, unsafeBitCast(glob_raw.baseAddress, to: UnsafePointer<Int8>.self))
         }

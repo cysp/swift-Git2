@@ -28,7 +28,7 @@ extension Oid: CustomStringConvertible, CustomDebugStringConvertible {
         get {
             do {
                 let buf = Buf()
-                try buf.grow(20)
+                try buf.grow(to: 20)
                 git_oid_tostr(buf.rawValue.pointee.ptr, 20, _inner)
                 let oid_string = try buf.stringValue()
                 return oid_string
